@@ -1,0 +1,41 @@
+const pool = require('../config/db');
+
+const getAllTaggings = async () => {
+    const result = await pool.query('SELECT * FROM tagging');
+    return result.rows;
+};
+
+const getTaggingByBookId = async (book_id) => {
+    const result = await pool.query('SELECT * FROM tagging WHERE books_id = $1', [book_id]);
+    return result.rows;
+};
+
+const getBooksByTagId = async (tag_id) => {
+    const result = await pool.query('SELECT * FROM tagging WHERE tag_id = $1', [tag_id]);
+    return result.rows;
+};
+
+const createTagging = async (tagging) => {
+    const { tag_id, books_id } = tagging;
+    const result = await pool.query(
+        'INSERT INTO tagging (tag_id, books_id) VALUES ($1, $2) RETURNING *',
+        [tag_id, books_id]
+    );
+    return result.rows[0];
+};
+
+const deleteTagging = async (tag_id, books_id) => {
+    const result = await pool.query(
+        'DELETE FROM tagging WHERE tag_id = $1 AND books_id = $2 RETURNING *',
+        [tag_id, books_id]
+    );
+    return result.rows[0];
+};
+
+module.exports = {
+    getAllTaggings,
+    getTaggingByBookId,
+    getBooksByTagId,
+    createTagging,
+    deleteTagging,
+};
