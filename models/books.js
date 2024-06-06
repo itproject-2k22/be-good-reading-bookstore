@@ -83,10 +83,34 @@ const deleteBook = async (id) => {
     }
 };
 
+const createBookNewPublisher = async (book) =>{
+    const { id, title, pages, publisher, price, name, city, country, telephone} = book;
+    const client = await pool.connect();
+    try {
+        await client.query('BEGIN');
+        await client.query(
+            'INSERT INTO publishers (id, name, city, country, telephone) VALUES ($1, $2, $3, $4, $5) RETURNING *',
+            [publisher, name, city, country, telephone]
+        );
+        const bookResult = await client.query(
+            'INSERT INTO books (id, title, pages, publisher, price) VALUES ($1, $2, $3, $4, $5) RETURNING *',
+            [id, title, pages, publisher, price]
+        );
+        await client.query('COMMIT');
+        return bookResult.rows[0];
+    } catch (err) {
+        await client.query('ROLLBACK');
+        throw err;
+    } finally {
+        client.release();
+    }
+}
+
 module.exports = {
     getAllBooks,
     getBookById,
     createBook,
     updateBook,
     deleteBook,
+    createBookNewPublisher,
 };

@@ -54,10 +54,20 @@ const deleteBook = async (req, res, next) => {
     }
 };
 
+const createBookNewPublisher = async (req, res, next) => {
+    try {
+        const book = await Book.createBookNewPublisher(req.body);
+        res.json(book);
+    } catch (err) {
+        next(err);
+    }
+};
+
 module.exports = {
     getAllBooks,
     getBookById,
     createBook,
     updateBook,
     deleteBook,
+    createBookNewPublisher,
 };
