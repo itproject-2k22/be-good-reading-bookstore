@@ -17,6 +17,8 @@ const tagRoutes = require('./routes/tagRoutes');
 const taggingRoutes = require('./routes/taggingRoutes');
 const warehouseRoutes = require('./routes/warehouseRoutes');
 const wishlistRoutes = require('./routes/wishlistRoutes');
+const functionRoutes = require('./routes/functionRoutes')
+const grbRoutes = require('./routes/grbRoutes')
 const errorHandler = require('./middleware/errorHandler');
 
 const app = express();
@@ -38,6 +40,8 @@ app.use('/api', tagRoutes);
 app.use('/api', taggingRoutes);
 app.use('/api', warehouseRoutes);
 app.use('/api', wishlistRoutes);
+app.use('/api', functionRoutes);
+app.use('/api', grbRoutes)
 app.use(errorHandler);
 
 const PORT = process.env.PORT || 5000;
